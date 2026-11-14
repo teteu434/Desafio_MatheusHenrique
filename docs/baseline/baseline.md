@@ -41,9 +41,12 @@ $env:PYTHONPATH = "src"
   --output docs/baseline/completo.json
 ```
 
+Os relatórios gerados ficam nesta pasta: `amostra.json` e `completo.json`.
+Saídas de terminal, stderr e códigos de saída estão transcritos abaixo.
+
 ## Resultados
 
-### `pytest -q` — saída em `pytest.txt`
+### `pytest -q`
 
 **5 falharam, 0 passaram.** Exit code 1. É o esperado pelo README ("No início,
 todos falham").
@@ -59,35 +62,34 @@ todos falham").
 As demais asserções de `test_status_rules` (as quatro contagens) e as cinco
 chaves restantes de `test_regression_report` já passam.
 
-### `ruff check .` — saída em `ruff.txt`
+### `ruff check .`
 
 **`All checks passed!`**, exit code 0. Não há lint pré-existente; qualquer
 apontamento futuro do ruff será introduzido por mim e deve ser tratado como tal.
 
-### CLI sobre `data/exemplo-validacao.csv`
+### CLI sobre `data/exemplo-validacao.csv` → `amostra.json`
 
-Exit code **0**. Artefatos: `amostra.json`, `amostra.stdout.txt`,
-`amostra.stderr.txt`, `amostra.exitcode.txt`.
+Exit code **0**, stderr vazio.
 
 - stdout: `Reservas: 12 | Confirmadas: 9 | Noites: -33 | Total BRL: 5962.41`
-- stderr: vazio.
 
-### CLI sobre `data/reservas_hoteis.csv`
+### CLI sobre `data/reservas_hoteis.csv` → `completo.json`
 
-Exit code **0**. Artefatos: `completo.json`, `completo.stdout.txt`,
-`completo.stderr.txt`, `completo.exitcode.txt`.
+Exit code **0**, stderr vazio.
 
 - stdout: `Reservas: 200 | Confirmadas: 153 | Noites: -1393 | Total BRL: 193218.53`
-- stderr: vazio.
 
 O arquivo tem **300 linhas de dados** (301 com o cabeçalho), mas o relatório
 informa `total_reservations: 200`. O `by_month` traz 7 meses e o `top_hotels`,
 5 itens.
 
+O CLI não quebrava em nenhum dos dois arquivos: terminava com sucesso e
+entregava números errados.
+
 ## Divergências da amostra contra as tabelas do README
 
-Comparação de `amostra.json` contra as tabelas entre `<!-- AMOSTRA:INICIO -->` e
-`<!-- AMOSTRA:FIM -->`. `generated_at` ignorado.
+Comparação de `amostra.json` contra as tabelas entre `<!-- AMOSTRA:INICIO -->`
+e `<!-- AMOSTRA:FIM -->` do README. `generated_at` ignorado.
 
 ### `summary` — 3 de 7 campos divergem
 
