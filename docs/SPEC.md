@@ -270,10 +270,14 @@ inteira em 2025-01 (ver A01).
 
 ---
 
-# Ambiguidades
+# Ambiguidades e decisões
 
-Nenhuma decidida por mim. As resolvidas pela amostra vêm com a conta e ficam
-marcadas para confirmação; as demais aguardam decisão.
+Todas decididas pelo usuário em 2026-11-14. Cada item guarda a análise que
+levou à decisão; a decisão fica na linha **Decidido**.
+
+Atenção: decisão que muda comportamento **não é correção de defeito**. A04, A05
+e A07 entram na Fase 6 (endurecimento), em commits separados dos F## da Fase 5,
+e o `README-ENTREGA.md` deve apresentá-las como melhoria deliberada.
 
 ### A01 — Estadia que cruza o mês: mês do check-in ou rateio por noite?
 
@@ -286,7 +290,7 @@ com 3 noites e 882.00 — **exatamente o que o README manda**. Na leitura (b),
 2025-01 ficaria com 8 noites da EX-03 (28 a 31) e 2025-02 com 2, mudando as duas
 linhas da tabela.
 
-**Resolvida pela amostra — confirmar: leitura (a).** R29 já reflete isso.
+**Decidido: leitura (a)** — confirmada pelo usuário. R29 já reflete isso.
 
 ### A02 — Empate em `top_hotels`: sobre o valor exato ou o arredondado?
 
@@ -295,10 +299,14 @@ quando as strings de 2 casas forem iguais.
 
 Impacto: dois hotéis separados por menos de um centavo (por exemplo 1000.004 e
 1000.001) saem na ordem de valor em (a) e na ordem de `hotel_id` em (b). A
-amostra não tem empate algum. **Aguardando decisão.**
+amostra não tem empate algum.
 
-Observação: o dataset real pode ou não produzir empate exato — vou medir isso na
-auditoria, antes de a decisão custar alguma coisa.
+Medição feita no dataset real (`data/reservas_hoteis.csv`, só `CONFIRMED`, com a
+conversão correta): os 12 hotéis têm 12 totais distintos, tanto no `Decimal`
+exato quanto arredondado a 2 casas, e a menor diferença entre vizinhos do top 6
+é R$ 123,76. **Nenhuma das duas leituras muda um único campo entregue.**
+
+**Decidido: leitura (a)**, desempate sobre o valor exato — coerente com R13.
 
 ### A03 — A média divide o total exato ou o total já arredondado?
 
@@ -312,7 +320,7 @@ Impacto na amostra: nenhum — 7566 é exato nas duas leituras, e 7566/28 =
 270.2142... vira 270.21 de qualquer jeito. Separar as leituras exige um caso cujo
 total tenha mais de 2 casas decimais.
 
-**Aguardando decisão** (recomendo (a), por R13).
+**Decidido: leitura (a)**, média sobre o total exato, por R13.
 
 ### A04 — Linha com moeda fora da tabela de câmbio
 
@@ -321,21 +329,31 @@ R07 garante que não acontece no dataset, e o docstring de `RowParser` diz que
 (a) erro de entrada, exit 2; (b) ignorar a linha; (c) estourar erro inesperado,
 exit 1. Afeta só robustez, nunca os números do dataset fornecido.
 
-**Aguardando decisão** (recomendo (a), coerente com o docstring e com R22).
+**Decidido: leitura (a)**, erro de entrada com exit 2.
+
+**Registrado como mudança de comportamento, não correção de defeito** (ressalva
+expressa do usuário). O código hoje estoura `KeyError` e cai no `except
+Exception` do `cli.py`, saindo com 1; nenhuma regra do README é violada por isso,
+porque R07 garante que o dataset não tem moeda sem taxa. A mudança melhora o
+diagnóstico, não conserta número algum.
 
 ### A05 — Status fora de `CONFIRMED` / `CANCELLED` / `NO_SHOW`
 
 O dataset só tem os três (confirmei: 235 / 31 / 34 em 300 linhas) e a amostra
 também. Leituras: (a) conta em `total_reservations` e em nenhum bucket; (b) erro
 de entrada, exit 2. O README diz que `total_reservations` é "o número de reservas
-no arquivo", o que sustenta (a). **Aguardando decisão.**
+no arquivo", o que sustenta (a).
+
+**Decidido: leitura (a)** — conta em `total_reservations`, em nenhum bucket.
+Também é **mudança de comportamento, não correção de defeito**: o dataset não
+exercita o caso.
 
 ### A06 — `--top` maior que o número de hotéis
 
 R28 diz "ou menos, se houver menos hotéis", então a lista encurta. O que fica em
 aberto é se vale truncar em silêncio ou avisar em stderr. Sem impacto no schema.
 
-**Aguardando decisão** (recomendo truncar em silêncio).
+**Decidido: truncar em silêncio.** É o que R28 já manda; nada a mudar.
 
 ### A07 — `--top` inválido: qual exit code e por qual caminho?
 
@@ -343,7 +361,8 @@ R21 exige inteiro >= 1 e R22 manda exit 2 para argumento inválido. `--top abc` 
 `--top 0` precisam ambos sair com 2. O README não diz se a mensagem vai para
 stderr nem se o texto importa.
 
-**Aguardando decisão** (recomendo: ambos exit 2, mensagem em stderr, texto livre).
+**Decidido: ambos exit 2, mensagem em stderr, texto livre.**
+Parte disso é **mudança de comportamento**, não defeito — ver a auditoria.
 
 ### A08 — Arredondamento por bucket contra soma dos buckets
 
@@ -353,11 +372,79 @@ soma das linhas pode diferir do `total_amount_brl` em centavos. Leituras:
 que a soma feche com o total. Na amostra não há conflito: 6684.00 + 882.00 =
 7566.00.
 
-**Aguardando decisão** (recomendo (a)).
+**Decidido: leitura (a)**, cada bucket arredonda o próprio subtotal.
 
 ### A09 — `generated_at`: relógio real ou valor fixo?
 
 R16 fixa o offset `-03:00` e manda ignorar o campo na comparação, mas não diz se
 o horário é o de execução. Sem impacto na avaliação automática.
 
-**Aguardando decisão** (recomendo o relógio real com offset fixo, como já está).
+**Decidido: relógio real com offset fixo**, como já está. Nada a mudar.
+
+---
+
+# Observações registradas (levantadas pelo usuário)
+
+Pontos que o usuário observou no código em 2026-11-14. Nenhum deles viola uma
+regra R## nos dados fornecidos, então **nenhum é defeito**. Ficam registrados
+aqui, com a medição que sustenta a classificação.
+
+### O10 — `hotel_name` divergente para o mesmo `hotel_id`
+
+O `report_builder` sobrescreve `hotels[hotel_id]["hotel_name"]` a cada linha, de
+modo que o nome publicado é o da **última** reserva daquele hotel na ordem do
+arquivo. Se o mesmo `hotel_id` aparecesse com nomes diferentes, o resultado
+dependeria da ordem das linhas.
+
+Medição: os 12 `hotel_id` de `data/reservas_hoteis.csv` têm **exatamente um
+nome cada**; o mesmo vale para a amostra. O README não diz qual nome vence num
+conflito.
+
+Classificação: **latente, severidade baixa.** Não altera nenhum campo entregue.
+Registrar; mudar só se o usuário quiser um critério explícito (primeiro nome
+visto, ou erro de entrada).
+
+### O11 — `currency` com caixa/espaço assimétricos entre leitura e consulta
+
+`CsvRateRepository` normaliza a chave com `.strip().upper()`
+(`csv_rate_repository.py:30`), mas `RowParser` só aplica `.strip()`
+(`row_parser.py:34`). Uma reserva com `usd` minúsculo consultaria `rates["usd"]`
+contra uma tabela indexada por `"USD"` e levantaria `KeyError` — mesmo caminho
+de A04, terminando em exit 1.
+
+Medição: os valores crus de `currency` no dataset são só `'BRL'`, `'USD'` e
+`'EUR'`, sem espaço e sem minúscula. O caso não é exercitado.
+
+Classificação: **latente, severidade baixa.** A assimetria é real e vale
+corrigir por simetria, mas é **mudança de comportamento**, não correção de
+defeito — mesma vala de A04, portanto Fase 6.
+
+### O12 — `by_month` só enxerga as confirmadas
+
+Observação original: um mês cujas reservas fossem todas canceladas sumiria da
+lista `by_month`.
+
+**Isto não é defeito: é o que o README exige.** R02 diz, literalmente, que
+`CANCELLED` e `NO_SHOW` "não entram em noites, valores, `by_month` nem
+`top_hotels`". A amostra confirma numericamente: `exemplo-validacao.csv` tem
+**11** check-ins em 2025-01, dos quais 3 não são confirmados (EX-04 `CANCELLED`,
+EX-05 `NO_SHOW`, EX-06 `CANCELLED`), e a tabela do README manda
+`reservations: 8` para 2025-01 — ou seja, só as confirmadas. Contar as 11
+quebraria a amostra.
+
+O resíduo real é só este: um mês com **zero** confirmadas não gera linha alguma,
+em vez de uma linha zerada. Isso também decorre de R02, e o dataset não exercita
+o caso — todo mês tem entre 21 e 39 confirmadas:
+
+| mês | CONFIRMED | CANCELLED | NO_SHOW |
+|-|-|-|-|
+| 2024-12 | 35 | 8 | 10 |
+| 2025-01 | 37 | 2 | 8 |
+| 2025-02 | 26 | 2 | 2 |
+| 2025-03 | 39 | 5 | 5 |
+| 2025-04 | 21 | 2 | 2 |
+| 2025-05 | 39 | 5 | 5 |
+| 2025-06 | 38 | 7 | 2 |
+
+Classificação: **não é defeito; nada a mudar.** Alterar violaria R02 e quebraria
+a amostra de validação.
