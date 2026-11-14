@@ -1,0 +1,89 @@
+{
+  "report_version": "1.0",
+  "generated_at": "2026-11-14T00:09:16-03:00",
+  "summary": {
+    "total_reservations": 200,
+    "confirmed_reservations": 153,
+    "cancelled_reservations": 22,
+    "no_show_reservations": 25,
+    "total_room_nights": -1393,
+    "total_amount_brl": "193218.53",
+    "average_nightly_rate_brl": "0.00"
+  },
+  "by_month": [
+    {
+      "month": "2024-12",
+      "reservations": 29,
+      "room_nights": -258,
+      "total_brl": "36594.73"
+    },
+    {
+      "month": "2025-01",
+      "reservations": 35,
+      "room_nights": -464,
+      "total_brl": "38118.30"
+    },
+    {
+      "month": "2025-02",
+      "reservations": 18,
+      "room_nights": -132,
+      "total_brl": "15501.70"
+    },
+    {
+      "month": "2025-03",
+      "reservations": 30,
+      "room_nights": -77,
+      "total_brl": "36370.32"
+    },
+    {
+      "month": "2025-04",
+      "reservations": 18,
+      "room_nights": -115,
+      "total_brl": "13638.96"
+    },
+    {
+      "month": "2025-05",
+      "reservations": 24,
+      "room_nights": -255,
+      "total_brl": "27687.12"
+    },
+    {
+      "month": "2025-06",
+      "reservations": 24,
+      "room_nights": -92,
+      "total_brl": "25307.41"
+    }
+  ],
+  "top_hotels": [
+    {
+      "hotel_id": "H04",
+      "hotel_name": "Hotel Porto Azul",
+      "room_nights": 24,
+      "total_brl": "9918.09"
+    },
+    {
+      "hotel_id": "H05",
+      "hotel_name": "Hotel Recife Plaza",
+      "room_nights": -71,
+      "total_brl": "10133.87"
+    },
+    {
+      "hotel_id": "H02",
+      "hotel_name": "Hotel Mirante",
+      "room_nights": -99,
+      "total_brl": "10395.07"
+    },
+    {
+      "hotel_id": "H08",
+      "hotel_name": "Hotel Iguazu Falls",
+      "room_nights": -84,
+      "total_brl": "12293.70"
+    },
+    {
+      "hotel_id": "H12",
+      "hotel_name": "Hotel Miami Beach",
+      "room_nights": -88,
+      "total_brl": "14243.92"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "report_version": "1.0",
+  "generated_at": "2026-11-14T00:08:59-03:00",
+  "summary": {
+    "total_reservations": 12,
+    "confirmed_reservations": 9,
+    "cancelled_reservations": 2,
+    "no_show_reservations": 1,
+    "total_room_nights": -33,
+    "total_amount_brl": "5962.41",
+    "average_nightly_rate_brl": "0.00"
+  },
+  "by_month": [
+    {
+      "month": "2025-01",
+      "reservations": 9,
+      "room_nights": -36,
+      "total_brl": "5936.90"
+    },
+    {
+      "month": "2025-02",
+      "reservations": 1,
+      "room_nights": 3,
+      "total_brl": "25.51"
+    }
+  ],
+  "top_hotels": [
+    {
+      "hotel_id": "H09",
+      "hotel_name": "Hotel Lisboa, Centro",
+      "room_nights": 3,
+      "total_brl": "25.51"
+    },
+    {
+      "hotel_id": "H02",
+      "hotel_name": "Hotel Mirante",
+      "room_nights": 2,
+      "total_brl": "36.90"
+    },
+    {
+      "hotel_id": "H05",
+      "hotel_name": "Hotel Recife Plaza",
+      "room_nights": 1,
+      "total_brl": "300.00"
+    },
+    {
+      "hotel_id": "H08",
+      "hotel_name": "Hotel Iguazu Falls",
+      "room_nights": 1,
+      "total_brl": "400.00"
+    },
+    {
+      "hotel_id": "H07",
+      "hotel_name": "Hotel Brasília Tower",
+      "room_nights": 2,
+      "total_brl": "600.00"
+    }
+  ]
+}

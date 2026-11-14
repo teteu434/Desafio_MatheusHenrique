@@ -1,0 +1,144 @@
+﻿FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+_______________________ test_currency_conversion_to_brl _______________________
+
+tmp_path = WindowsPath('C:/Users/people4tech.matheus/AppData/Local/Temp/pytest-of-people4tech.matheus/pytest-4/test_currency_conversion_to_br0')
+
+    def test_currency_conversion_to_brl(tmp_path):
+        """Multiplica o valor pela taxa, sem inverter a operação."""
+        report = run_cli(
+            tmp_path,
+            [
+                {"reservation_id": "R-1", "currency": "BRL", "amount": "100.00"},
+                {"reservation_id": "R-2", "currency": "USD", "amount": "100.00"},
+            ],
+        )
+>       assert report["summary"]["total_amount_brl"] == "642.00"
+E       AssertionError: assert '118.45' == '642.00'
+E         
+E         - 642.00
+E         + 118.45
+
+tests\test_currency.py:15: AssertionError
+______________________ test_nights_across_month_boundary ______________________
+
+tmp_path = WindowsPath('C:/Users/people4tech.matheus/AppData/Local/Temp/pytest-of-people4tech.matheus/pytest-4/test_nights_across_month_bound0')
+
+    def test_nights_across_month_boundary(tmp_path):
+        """A diferença de datas considera a virada de mês, não o dia do mês."""
+        report = run_cli(
+            tmp_path,
+            [
+                {
+                    "reservation_id": "R-1",
+                    "checkin_date": "2025-01-30",
+                    "checkout_date": "2025-02-02",
+                    "rooms": "1",
+                }
+            ],
+        )
+>       assert report["summary"]["total_room_nights"] == 3
+E       assert -28 == 3
+
+tests\test_nights.py:19: AssertionError
+______________________ test_regression_report_on_sample _______________________
+
+tmp_path = WindowsPath('C:/Users/people4tech.matheus/AppData/Local/Temp/pytest-of-people4tech.matheus/pytest-4/test_regression_report_on_samp0')
+
+    def test_regression_report_on_sample(tmp_path):
+        """Relatório completo de uma amostra pequena, com status, noites e câmbio."""
+        report = run_cli(
+            tmp_path,
+            [
+                {
+                    "reservation_id": "R-1",
+                    "amount": "1000.00",
+                    "checkin_date": "2025-01-10",
+                    "checkout_date": "2025-01-13",
+                },
+                {"reservation_id": "R-2", "status": "CANCELLED", "amount": "500.00"},
+                {
+                    "reservation_id": "R-3",
+                    "currency": "USD",
+                    "amount": "100.00",
+                    "checkin_date": "2025-01-20",
+                    "checkout_date": "2025-01-22",
+                },
+            ],
+        )
+>       assert report["summary"] == {
+            "total_reservations": 3,
+            "confirmed_reservations": 2,
+            "cancelled_reservations": 1,
+            "no_show_reservations": 0,
+            "total_room_nights": 5,
+            "total_amount_brl": "1542.00",
+            "average_nightly_rate_brl": "308.40",
+        }
+E       AssertionError: assert {'average_nig...ions': 0, ...} == {'average_nig...ions': 0, ...}
+E         
+E         Omitting 5 identical items, use -vv to show
+E         Differing items:
+E         {'average_nightly_rate_brl': '203.69'} != {'average_nightly_rate_brl': '308.40'}
+E         {'total_amount_brl': '1018.45'} != {'total_amount_brl': '1542.00'}
+E         Use -v to get more diff
+
+tests\test_regression_report.py:27: AssertionError
+_______________ test_status_rules_exclude_cancelled_and_no_show _______________
+
+tmp_path = WindowsPath('C:/Users/people4tech.matheus/AppData/Local/Temp/pytest-of-people4tech.matheus/pytest-4/test_status_rules_exclude_canc0')
+
+    def test_status_rules_exclude_cancelled_and_no_show(tmp_path):
+        """Somente CONFIRMED entra nos totais financeiros."""
+        report = run_cli(
+            tmp_path,
+            [
+                {"reservation_id": "R-1", "status": "CONFIRMED", "amount": "100.00"},
+                {"reservation_id": "R-2", "status": "CANCELLED", "amount": "50.00"},
+                {"reservation_id": "R-3", "status": "NO_SHOW", "amount": "20.00"},
+            ],
+        )
+        assert report["summary"]["total_reservations"] == 3
+        assert report["summary"]["confirmed_reservations"] == 1
+        assert report["summary"]["cancelled_reservations"] == 1
+        assert report["summary"]["no_show_reservations"] == 1
+>       assert report["summary"]["total_amount_brl"] == "100.00"
+E       AssertionError: assert '120.00' == '100.00'
+E         
+E         - 100.00
+E         ?  ^
+E         + 120.00
+E         ?  ^
+
+tests\test_status_rules.py:20: AssertionError
+____________________ test_top_hotels_are_ranked_descending ____________________
+
+tmp_path = WindowsPath('C:/Users/people4tech.matheus/AppData/Local/Temp/pytest-of-people4tech.matheus/pytest-4/test_top_hotels_are_ranked_des0')
+
+    def test_top_hotels_are_ranked_descending(tmp_path):
+        """O ranking mostra os hotéis de maior valor primeiro."""
+        report = run_cli(
+            tmp_path,
+            [
+                {"reservation_id": "R-1", "hotel_id": "H01", "hotel_name": "Hotel A", "amount": "1000.00"},
+                {"reservation_id": "R-2", "hotel_id": "H02", "hotel_name": "Hotel B", "amount": "900.00"},
+                {"reservation_id": "R-3", "hotel_id": "H03", "hotel_name": "Hotel C", "amount": "800.00"},
+                {"reservation_id": "R-4", "hotel_id": "H04", "hotel_name": "Hotel D", "amount": "700.00"},
+            ],
+            top=3,
+        )
+>       assert [hotel["hotel_id"] for hotel in report["top_hotels"]] == ["H01", "H02", "H03"]
+E       AssertionError: assert ['H04', 'H03', 'H02'] == ['H01', 'H02', 'H03']
+E         
+E         At index 0 diff: 'H04' != 'H01'
+E         Use -v to get more diff
+
+tests\test_top_hotels.py:18: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_currency.py::test_currency_conversion_to_brl - AssertionErr...
+FAILED tests/test_nights.py::test_nights_across_month_boundary - assert -28 == 3
+FAILED tests/test_regression_report.py::test_regression_report_on_sample - As...
+FAILED tests/test_status_rules.py::test_status_rules_exclude_cancelled_and_no_show
+FAILED tests/test_top_hotels.py::test_top_hotels_are_ranked_descending - Asse...
+5 failed in 1.01s
+EXITCODE=1
