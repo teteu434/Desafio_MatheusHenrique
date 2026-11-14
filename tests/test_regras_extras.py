@@ -103,6 +103,27 @@ def test_noites_multiplicam_pelo_numero_de_quartos(
     assert relatorio["summary"]["total_room_nights"] == noites_esperadas
 
 
+def test_empate_no_ranking_desempata_por_hotel_id_ascendente(tmp_path: Path) -> None:
+    """R18: `total_brl` decrescente, mas o empate desempata por `hotel_id` ASCENDENTE.
+
+    Os dois critérios correm em sentidos opostos, então `reverse=True` sobre a
+    chave inteira não serve: inverteria também o desempate. Nem a amostra nem o
+    dataset têm empate (medido em A02), então sem este teste a regressão para
+    `reverse=True` passaria despercebida.
+    """
+    relatorio = run_cli(
+        tmp_path,
+        [
+            {"reservation_id": "R-1", "hotel_id": "H02", "hotel_name": "Hotel B", "amount": "200.00"},
+            {"reservation_id": "R-2", "hotel_id": "H03", "hotel_name": "Hotel C", "amount": "100.00"},
+            {"reservation_id": "R-3", "hotel_id": "H01", "hotel_name": "Hotel A", "amount": "100.00"},
+        ],
+    )
+
+    assert [hotel["hotel_id"] for hotel in relatorio["top_hotels"]] == ["H02", "H01", "H03"]
+    assert [hotel["total_brl"] for hotel in relatorio["top_hotels"]] == ["200.00", "100.00", "100.00"]
+
+
 def test_top_maior_que_a_quantidade_de_hoteis(tmp_path: Path) -> None:
     """R28: top_hotels tem --top itens, ou menos se houver menos hotéis.
 

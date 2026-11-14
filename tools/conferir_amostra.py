@@ -108,10 +108,18 @@ CAMPOS_INTEIROS = {
 
 
 def _normalizar(campo: str, valor) -> str:
-    """Dinheiro compara como string de 2 casas; contagem compara como inteiro."""
+    """Dinheiro compara como string de 2 casas; contagem, como inteiro JSON.
+
+    R26 exige os dois tipos: um relatório que emitisse `"total_reservations": "12"`
+    tem o valor certo e o tipo errado, e precisa ser acusado como divergência.
+    """
     if campo in CAMPOS_INTEIROS:
-        return str(valor).strip()
-    return str(valor).strip()
+        if isinstance(valor, bool) or not isinstance(valor, int):
+            return f"{valor!r} (esperava inteiro JSON, veio {type(valor).__name__})"
+        return str(valor)
+    if not isinstance(valor, str):
+        return f"{valor!r} (esperava string, veio {type(valor).__name__})"
+    return valor.strip()
 
 
 def comparar(esperado: dict, obtido: dict) -> list[str]:
