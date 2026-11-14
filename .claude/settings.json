@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(tests/**)",
+      "Write(tests/**)",
+      "MultiEdit(tests/**)",
+      "NotebookEdit(tests/**)",
+      "Edit(data/**)",
+      "Write(data/**)",
+      "MultiEdit(data/**)",
+      "NotebookEdit(data/**)",
+      "Edit(./tests/**)",
+      "Write(./tests/**)",
+      "Edit(./data/**)",
+      "Write(./data/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/pos_edicao.py\"",
+            "timeout": 200
+          }
+        ]
+      }
+    ]
+  }
+}
