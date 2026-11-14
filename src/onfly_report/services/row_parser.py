@@ -31,7 +31,9 @@ class RowParser:
                 checkout=date.fromisoformat((values.get("checkout_date") or "").strip()),
                 rooms=int((values.get("rooms") or "").strip()),
                 status=(values.get("status") or "").strip(),
-                currency=(values.get("currency") or "").strip(),
+                # .upper() espelha CsvRateRepository, que indexa a tabela com
+                # .strip().upper() — sem isso, "usd" não encontraria "USD" (O11).
+                currency=(values.get("currency") or "").strip().upper(),
                 amount=Decimal((values.get("amount") or "").strip()),
                 payment_method=(values.get("payment_method") or "").strip(),
                 line_number=raw.line_number,

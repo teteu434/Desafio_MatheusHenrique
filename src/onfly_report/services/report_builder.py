@@ -6,6 +6,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from decimal import ROUND_HALF_UP, Decimal
 
+from ..exceptions import InputFileError
 from ..repositories.csv_rate_repository import CsvRateRepository
 from ..repositories.csv_reservation_repository import CsvReservationRepository
 from .currency_converter import convert_to_brl
@@ -60,7 +61,11 @@ class ReportBuilder:
 
         for row in confirmed:
             room_nights = calculate_room_nights(row.checkin, row.checkout, row.rooms)
-            amount_brl = convert_to_brl(row.amount, row.currency, rates)
+            try:
+                amount_brl = convert_to_brl(row.amount, row.currency, rates)
+            except InputFileError as err:
+                # O conversor não conhece a origem do dado; a linha física vive aqui.
+                raise InputFileError(f"linha {row.line_number}: {err}") from err
 
             total_nights += room_nights
             total_amount += amount_brl
