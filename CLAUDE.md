@@ -12,20 +12,22 @@ pip install -r requirements-dev.txt  # pytest 8.3.4 + ruff 0.8.4
 
 pytest -q                            # pythonpath=["src"] já vem do pyproject
 ruff check .
-ruff format --check .                # só se solicitado; não formatar em massa
 
 $env:PYTHONPATH = "src"; python -m onfly_report `
-  --input data/reservas_hoteis.csv `
-  --rates data/taxas_cambio.csv `
+  --input data/reservas_hoteis.csv --rates data/taxas_cambio.csv `
   --output output/report.json
+
+# oráculo da Fase 2: confere o JSON contra a amostra do README (exit 0 = bate)
+python tools/conferir_amostra.py output/exemplo.json
 ```
 
 PowerShell 5.1 não tem `&&`, `||`, `?:` nem `??`. Encadear: `A; if ($?) { B }`.
 
 ## Invioláveis
 
-- Não editar `tests/**` nem `data/**` (trava em `.claude/settings.json`).
-  Teste fornecido que pareça errado: reportar ao usuário, nunca contornar.
+- Não editar os 6 testes FORNECIDOS, `data/**` nem `README.md` (trava em
+  `.claude/settings.json`). Criar testes NOVOS em `tests/` é permitido e previsto
+  pelo README. Teste fornecido que pareça errado: reportar, nunca contornar.
 - Não mudar comando, argumentos, códigos de saída, schema nem semântica do relatório.
 - Nunca renomear campos do relatório nem identificadores já existentes.
 - Dinheiro: `Decimal` sempre, `float` nunca. Arredondar só na serialização,

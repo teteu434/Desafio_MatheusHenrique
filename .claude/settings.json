@@ -1,18 +1,33 @@
 {
   "permissions": {
     "deny": [
-      "Edit(tests/**)",
-      "Write(tests/**)",
-      "MultiEdit(tests/**)",
-      "NotebookEdit(tests/**)",
+      "Edit(tests/helpers.py)",
+      "Write(tests/helpers.py)",
+      "MultiEdit(tests/helpers.py)",
+      "Edit(tests/test_currency.py)",
+      "Write(tests/test_currency.py)",
+      "MultiEdit(tests/test_currency.py)",
+      "Edit(tests/test_nights.py)",
+      "Write(tests/test_nights.py)",
+      "MultiEdit(tests/test_nights.py)",
+      "Edit(tests/test_regression_report.py)",
+      "Write(tests/test_regression_report.py)",
+      "MultiEdit(tests/test_regression_report.py)",
+      "Edit(tests/test_status_rules.py)",
+      "Write(tests/test_status_rules.py)",
+      "MultiEdit(tests/test_status_rules.py)",
+      "Edit(tests/test_top_hotels.py)",
+      "Write(tests/test_top_hotels.py)",
+      "MultiEdit(tests/test_top_hotels.py)",
       "Edit(data/**)",
       "Write(data/**)",
       "MultiEdit(data/**)",
       "NotebookEdit(data/**)",
-      "Edit(./tests/**)",
-      "Write(./tests/**)",
       "Edit(./data/**)",
-      "Write(./data/**)"
+      "Write(./data/**)",
+      "Edit(README.md)",
+      "Write(README.md)",
+      "MultiEdit(README.md)"
     ]
   },
   "hooks": {
